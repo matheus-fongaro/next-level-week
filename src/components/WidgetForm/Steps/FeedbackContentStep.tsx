@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'phosphor-react'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { FeedbackType, feedbackTypes } from '..'
 import { CloseBtn } from '../../CloseBtn'
 import { ScreenshotButtton } from '../ScreenshotButton'
@@ -15,6 +15,12 @@ export function FeedbackContentStep({
 }: feedbackContentStepProps) {
   const feedbackTypeInfo = feedbackTypes[feedbackType]
   const [screenshot, setScreenshot] = useState<string | null>(null)
+  const [comment, setComment] = useState('')
+
+  function handleSubmitFeedback(event: FormEvent) {
+    event.preventDefault()
+    console.log(screenshot, comment)
+  }
 
   return (
     <>
@@ -38,8 +44,9 @@ export function FeedbackContentStep({
         <CloseBtn />
       </header>
 
-      <form className="my-4 w-full">
+      <form className="my-4 w-full" onSubmit={handleSubmitFeedback}>
         <textarea
+          onChange={(event) => setComment(event.target.value)}
           className="
             min-w-[304px] w-full min-h-[112px] text-sm 
             placeholder:text-zinc-400 text-zinc-100 border-zinc-600 
@@ -58,11 +65,13 @@ export function FeedbackContentStep({
 
           <button
             type="submit"
+            disabled={!screenshot || !comment}
             className="
             p-2 bg-brand-500 rounded-stm border-transparent flex flex-1
             justify-center items-center text-sm hover:bg-brand-300
             focus:outline-none focus:ring-2 focus:ring-offset-2
             focus:ring-offset-zinc-900 focus:ring-brand-500 transition-colors
+            disabled:opacity-50 disabled:hover:bg-brand-500
           "
           >
             Enviar feedback
